@@ -127,5 +127,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/userauth/login/'
 
 # Private API endpoint and token
-API_URL = "http://172.16.20.229:8001/api/posts/"
-API_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3ODkwOTY1LCJpYXQiOjE3NDcyOTA5NjUsImp0aSI6Ijg1Y2YyMDY3ZWQ1MjRmZTliOThhNTY3ZGFkNWI4MzVjIiwidXNlcl9pZCI6MX0.LrPiMgeyHeG5gCIRFcgEkLaIq3D1byBp6O8RaZAg1lQ"
+API_URL = config('API_URL')
+API_TOKEN = config('API_TOKEN')
