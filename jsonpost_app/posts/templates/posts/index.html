@@ -1,0 +1,96 @@
+<!-- Only replace your current HTML with this version -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .post { border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+        .button { padding: 8px 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; text-decoration: none; }
+        .button-delete { background-color: #dc3545; }
+        .button-cancel { background-color: #6c757d; }
+        .history-log { font-size: 0.9em; color: #555; padding: 10px; border-left: 3px solid #eee; }
+    </style>
+</head>
+<body>
+
+<h1>Posts</h1>
+<form method="post" action="{% url 'sync_more_posts' %}">
+    {% csrf_token %}
+    <button type="submit" class="button">Pull</button>
+</form>
+<br>
+
+{% if mode == 'list' %}
+  {% for post in posts %}
+    <div class="post">
+        <h4><a href="{% url 'view_single_post' post.id %}">{{ post.title }}</a></h4>
+       <!-- <p> <small>Last edited by {{ post.last_edited_by }} on {{ post.last_edited_at }}</small></p> -->
+        <!-- {# Show latest version hash if available #}
+        {% if post.posthistory_set.last %}
+          <small><strong>Latest Version Hash:</strong> {{ post.posthistory_set.last.version_hash }}</small><br>
+        {% endif %} -->
+        <!-- <br> -->
+        <!-- <a href="{% url 'edit_post' post.id %}" class="button">Edit</a>
+        <a href="{% url 'delete_post' post.id %}" class="button button-delete">Delete</a> -->
+    </div>
+  {% empty %}
+    <p>No posts available.</p>
+  {% endfor %}
+
+{% elif mode == 'detail' %}
+  <h2>{{ post.title }}</h2>
+  <p>{{ post.content }}</p>
+  <p><small>Last edited by {{ post.last_edited_by }} on {{ post.last_edited_at }}</small></p>
+
+  <a href="{% url 'edit_post' post.id %}" class="button">Edit</a>
+  <a href="{% url 'delete_post' post.id %}" class="button button-delete">Delete</a>
+  <a href="{% url 'view_posts' %}" class="button button-cancel">Back</a>
+
+  {% if history %}
+    <div class="history-log">
+      <h4>Version History</h4>
+      <ul>
+        {% for h in history %}
+          <li>
+            <strong>{{ h.timestamp|date:"Y-m-d H:i" }}</strong> — <em>{{ h.editor }}</em><br>
+            <strong>Title:</strong> {{ h.title }}<br>
+            <strong>Content:</strong> {{ h.content }}<br>
+            <strong>Version Hash:</strong> {{ h.version_hash }}
+          </li><br>
+        {% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <p>No edit history.</p>
+  {% endif %}
+
+{% elif mode == 'edit' %}
+  <h2>Edit Post: {{ post.title }}</h2>
+  {% if error_message %}<p style="color: red;">{{ error_message }}</p>{% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <label>Title:</label><br>
+    <input type="text" name="title" value="{{ post.title }}"><br><br>
+    <label>Content:</label><br>
+    <textarea name="body" rows="6" style="width: 100%;">{{ post.content }}</textarea><br><br>
+    <button type="submit" class="button">Save Changes</button>
+    <a href="{% url 'view_posts' %}" class="button button-cancel">Cancel</a>
+  </form>
+
+{% elif mode == 'delete' %}
+  <h2>Confirm Delete</h2>
+  <p>Are you sure you want to delete: <strong>{{ post.title }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="button button-delete">Confirm Delete</button>
+    <a href="{% url 'view_posts' %}" class="button button-cancel">Cancel</a>
+  </form>
+{% endif %}
+
+</body>
+</html>
+
+

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset = "UTF-8">
+<title>Login</title>
+
+<style>
+        body {
+            background: #f3f4f6;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+  </head>
+<body>
+  
+  <div class="login-container" style="width: 350px; margin: 80px auto; padding: 30px; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+    <h2> LOGIN </h2>
+  
+
+    <form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    <label>Username:</label><br>
+    <input type="text" name="username" placeholder="Username" required style="width: 90%; padding: 10px; margin: 10px 0;"><br>
+
+    <label>Password:</label><br>
+     <input type="password" name="password" placeholder="Password" required style="width: 90%; padding: 10px; margin: 10px 0;"><br>
+
+    <button type="submit" style="width: 95%; padding: 10px; background-color: #4f46e5; color: white; border: none; border-radius: 5px; cursor: pointer;"> Login </button>
+  </form>
+
+  {% if messages %}
+  <div class="error-message"></div>
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  {% endif %}
+  
+</div>
+</body>
+</html>
